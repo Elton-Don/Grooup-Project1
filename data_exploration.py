@@ -1,5 +1,8 @@
 import pandas as pd
+import numpy as np
+from numpy import *
 import matplotlib.pyplot as plt
+from scipy import stats
 
 
 master_df = pd.read_csv('MLB_Ind_Game_Data.csv', encoding='ISO-8859–1')
@@ -19,7 +22,28 @@ win_pct = []
 wins = []
 fans_per_win = []
 wins_per_season = []
+base_attendances = []
 
+teams = delete(teams, [30,31,32,33], axis=0)
+for i in range(0,len(master_df['Team'])):
+    if master_df['Team'][i] == 'FLA':
+        master_df['Team'][i] = 'MIA'
+    if master_df['Home Team'][i] == 'FLA':
+        master_df['Home Team'][i] = 'MIA'
+    if master_df['Away Team'][i] == 'FLA':
+        master_df['Away Team'][i] = 'MIA'
+    if master_df['Team'][i] == 'ANA':
+        master_df['Team'][i] = 'LAA'
+    if master_df['Home Team'][i] == 'ANA':
+        master_df['Home Team'][i] = 'LAA'
+    if master_df['Away Team'][i] == 'ANA':
+        master_df['Away Team'][i] = 'LAA'
+    if master_df['Team'][i] == 'TBD':
+        master_df['Team'][i] = 'TBR'
+    if master_df['Home Team'][i] == 'TBD':
+        master_df['Home Team'][i] = 'TBR'
+    if master_df['Away Team'][i] == 'TBD':
+        master_df['Away Team'][i] = 'TBR'
 
 
 for team in teams:
@@ -66,6 +90,9 @@ final_df = {'Team': teams,
             'Win %': win_pct,
             'Total Wins': wins}
 
+
+
+
 for i in range(0,len(final_df['Team'])):
     fans_per_win.append(final_df['Fans/yr'][i]/final_df['Total Wins'][i])
 
@@ -74,28 +101,50 @@ for i in range(0,len(final_df['Team'])):
 
 final_df['Avg. Wins/Season'] = wins_per_season
 final_df['Fans/win'] = fans_per_win
+final_df['Base Attendance'] = base_attendances
+
+x = np.linspace(0, 100)
+slope, intercept, r_value, p_value, std_err0r = stats.linregress(final_df['Avg. Wins/Season'],
+                                                                 final_df['Avg. Home Attendance'])
+print(intercept)
+print(slope)
+y = slope*x + intercept
+
+for i in range(0,len(final_df['Team'])):
+    base_attendance = (final_df['Avg. Wins/Season'][i] * slope + intercept)
+    base_attendance = final_df['Avg. Home Attendance'][i] - base_attendance
+    base_attendances.append(base_attendance)
+
+
 
 final_df = pd.DataFrame(final_df)
-final_df = final_df.drop([30, 31, 32, 33])
+print(final_df.sort_values(by=['Base Attendance'], ascending=False))
+
 final_df[['Avg. Home Attendance',
           'Fans/yr', 'Away draw power']] = final_df[['Avg. Home Attendance',
                                                      'Fans/yr', 'Away draw power']].astype(int)
 
 final_df = final_df.sort_values(by=['Avg. Home Attendance'], ascending=False)
-
-
 final_df = final_df.reset_index()
 
 
-plt.bar(final_df['Team'],final_df['Avg. Home Attendance'])
+plt.bar(final_df['Team'], final_df['Avg. Home Attendance'])
+
 plt.xlabel('Team')
 plt.ylabel('Avg. Home Attendance')
+
 plt.show()
 
-plt.scatter(final_df['Avg. Wins/Season'],final_df['Fans/yr'])
-plt.show()
+
+plt.scatter(final_df['Avg. Wins/Season'], final_df['Avg. Home Attendance'])
+plt.plot(x, y,'r',label='fitted line')
+plt.xlim(60, 100)
+plt.ylim(0,50000)
+plt.xlabel('Avg. Wins/Season')
+plt.ylabel('Avg. Home Attendance')
+
+
 
 plt.bar(final_df['Team'], final_df['Away draw power'])
-plt.show()
 
-print(final_df)
+plt.show()
