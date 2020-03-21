@@ -1,0 +1,10 @@
+
+Figure1 -- This bar graph depicts the average attendance across seven years of sampling for each team in the MLB.  If this was our only data set, it would appear that the Yankees have the 'best' fan base in the MLB.
+
+Figure2 -- This scatter plot depicts the relationship between each team's average home attendance and each team's wins per season.  The linear regression demonstrates that there is a positive correlation between how winning a team is and how high their attendance numbers are ("fair weather fans" are a significant phenomena)
+
+Figure3 -- This bar graph depicts the "away drawing power" of each team in the MLB.  The "away drawing power" value is arrived at by calculating the difference between each home-team's average attendance and their average attendance against each particular away-team.  A team's "away drawing power" appears to have some kind of correlation with their metropolitan statistical area's population, though that correlation has not been statistically established or depicted here.
+
+Figure4 -- This bar graph depicts the average attendance per person in each team's metropolitan area (metro population counts taken from US census data).  We would expect the metro areas with the smallest population to give their teams the biggest "bump" in this graph.  Sure enough, Milwaukee (which is the smallest metro area in the MLB) ranks 1st in this graph, whereas they ranked 10th in terms of unadjusted attendance numbers.
+
+Figure5 -- This bar graph depicts our final quantification of a "best fans" index for the MLB.  These values were arrived at by ranking each team's fanbase in order of 1) average attendance 2) away drawing power 3) average attendance per capita 4) resilience ("are they fair weather fans?") and then averaging together those rankings.  The result is a tie for Best Fanbase between the STL Cardinals and the SF Giants.
