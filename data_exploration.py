@@ -15,6 +15,7 @@ master_df = master_df.drop(['Code', 'R', 'RA', 'Inn', 'Rank', 'GB', 'Save', 'Tim
 dataframe column values
 '''
 teams = master_df['Team'].unique()
+teams = delete(teams, [30, 31, 32, 33], axis=0)
 home_avg_attendance = []
 fans_per_year = []
 away_draw_power = []
@@ -24,7 +25,7 @@ fans_per_win = []
 wins_per_season = []
 base_attendances = []
 
-teams = delete(teams, [30,31,32,33], axis=0)
+
 for i in range(0,len(master_df['Team'])):
     if master_df['Team'][i] == 'FLA':
         master_df['Team'][i] = 'MIA'
@@ -60,7 +61,7 @@ for team in teams:
     home_df = master_df[master_df['Home Team'] == team]
     total_attendance = home_df['Attendance'].sum()
     avg_attendance = home_df['Attendance'].mean()
-    home_avg_attendance.append(avg_attendance)
+    home_avg_attendance.append(round(avg_attendance,2))
 
 
 '''
@@ -69,7 +70,7 @@ loop calculating average difference in attendance vs. the norm for each team whe
 for team in teams:
     opp_df = master_df[master_df['Away Team'] == team]
     avg_draw_diff = opp_df['Attendance vs Avg'].mean()
-    away_draw_power.append(avg_draw_diff)
+    away_draw_power.append(round(avg_draw_diff,2))
 
 
 
@@ -91,34 +92,27 @@ final_df = {'Team': teams,
             'Total Wins': wins}
 
 
-
-
-for i in range(0,len(final_df['Team'])):
-    fans_per_win.append(final_df['Fans/yr'][i]/final_df['Total Wins'][i])
-
 for i in range(0,len(final_df['Team'])):
     wins_per_season.append(round(final_df['Total Wins'][i]/7, 2))
 
 final_df['Avg. Wins/Season'] = wins_per_season
-final_df['Fans/win'] = fans_per_win
 final_df['Base Attendance'] = base_attendances
 
 x = np.linspace(0, 100)
 slope, intercept, r_value, p_value, std_err0r = stats.linregress(final_df['Avg. Wins/Season'],
                                                                  final_df['Avg. Home Attendance'])
-print(intercept)
-print(slope)
+
 y = slope*x + intercept
 
 for i in range(0,len(final_df['Team'])):
     base_attendance = (final_df['Avg. Wins/Season'][i] * slope + intercept)
     base_attendance = final_df['Avg. Home Attendance'][i] - base_attendance
-    base_attendances.append(base_attendance)
+    base_attendances.append(round(base_attendance, 2))
 
 
 
 final_df = pd.DataFrame(final_df)
-print(final_df.sort_values(by=['Base Attendance'], ascending=False))
+
 
 final_df[['Avg. Home Attendance',
           'Fans/yr', 'Away draw power']] = final_df[['Avg. Home Attendance',
@@ -128,23 +122,24 @@ final_df = final_df.sort_values(by=['Avg. Home Attendance'], ascending=False)
 final_df = final_df.reset_index()
 
 
+plt.figure(figsize=(20,10))
 plt.bar(final_df['Team'], final_df['Avg. Home Attendance'])
-
 plt.xlabel('Team')
 plt.ylabel('Avg. Home Attendance')
+plt.savefig('figure1.png')
 
-plt.show()
 
-
-plt.scatter(final_df['Avg. Wins/Season'], final_df['Avg. Home Attendance'])
-plt.plot(x, y,'r',label='fitted line')
-plt.xlim(60, 100)
-plt.ylim(0,50000)
+plt.figure(figsize=(20,10))
+plt.scatter(final_df['Avg. Wins/Season'], final_df['Avg. Home Attendance'],label='Original Data')
+plt.plot(x, y, 'r', label='fitted line')
+plt.legend(loc=3, prop={'size': 20})
+plt.xlim(65, 96)
+plt.ylim(0, 50000)
 plt.xlabel('Avg. Wins/Season')
 plt.ylabel('Avg. Home Attendance')
+plt.savefig('figure2.png')
 
 
-
+plt.figure(figsize=(20,10))
 plt.bar(final_df['Team'], final_df['Away draw power'])
-
-plt.show()
+plt.savefig('figure3.png')
