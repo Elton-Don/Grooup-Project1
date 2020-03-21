@@ -24,7 +24,9 @@ wins = []
 fans_per_win = []
 wins_per_season = []
 base_attendances = []
-
+city_pop = [2792127, 4268289, 5379176, 2734044, 4588680, 9488493, 9488493, 2122940, 2070965, 4295700, 6063540, 2025297,
+            12874797, 12874797, 5673185, 2601465, 1560621, 3391191, 19716880, 19716880, 4402729, 5992766, 2358746,
+            3138265, 3504628, 4402729, 2819241, 6575833, 5928000, 5759330]
 '''
 There are three teams that have had multiple three letter team IDs.
 If statements align team IDs
@@ -94,20 +96,28 @@ final_df = {'Team': teams,
             'Fans/yr': fans_per_year,
             'Away draw power': away_draw_power,
             'Win %': win_pct,
-            'Total Wins': wins}
+            'Total Wins': wins,
+            'City Pop': city_pop}
 
 
 for i in range(0,len(final_df['Team'])):
     wins_per_season.append(round(final_df['Total Wins'][i]/7, 2))
 
+attendance_per_cap = []
+for i in range(0,len(final_df['Team'])):
+    attendance_cap = final_df['Fans/yr'][i]/final_df['City Pop'][i]
+    attendance_per_cap.append(attendance_cap)
+
+final_df['Attendance per capita'] = attendance_per_cap
 final_df['Avg. Wins/Season'] = wins_per_season
 final_df['Base Attendance'] = base_attendances
+
 
 x = np.linspace(0, 100)
 slope, intercept, r_value, p_value, std_err0r = stats.linregress(final_df['Avg. Wins/Season'],
                                                                  final_df['Avg. Home Attendance'])
-
 y = slope*x + intercept
+
 
 for i in range(0,len(final_df['Team'])):
     base_attendance = (final_df['Avg. Wins/Season'][i] * slope + intercept)
@@ -117,8 +127,6 @@ for i in range(0,len(final_df['Team'])):
 
 
 final_df = pd.DataFrame(final_df)
-
-
 final_df[['Avg. Home Attendance',
           'Fans/yr', 'Away draw power']] = final_df[['Avg. Home Attendance',
                                                      'Fans/yr', 'Away draw power']].astype(int)
@@ -128,7 +136,22 @@ final_df = final_df.reset_index()
 final_df.to_csv('presentation_data.csv')
 
 
-plt.figure(figsize=(20,10))
+final_rank = []
+ranking_df = final_df.drop(['Fans/yr', 'Win %', 'Total Wins', 'Avg. Wins/Season', 'index'], axis=1)
+ranking_df['Rank 1'] = ranking_df['Avg. Home Attendance'].rank()
+ranking_df['Rank 2'] = ranking_df['Away draw power'].rank()
+ranking_df['Rank 3'] = ranking_df['Base Attendance'].rank()
+ranking_df['Rank 4'] = ranking_df['Attendance per capita'].rank()
+
+for i in range(0, len(ranking_df['Team'])):
+    rank = (ranking_df['Rank 1'][i] + ranking_df['Rank 2'][i] + ranking_df['Rank 3'][i] + ranking_df['Rank 4'][i])/4
+    final_rank.append(rank)
+ranking_df['Final Rank'] = final_rank
+ranking_df = ranking_df.drop(['Avg. Home Attendance', 'Away draw power', 'Base Attendance', 'Rank 1', 'Rank 2', 'Rank 3', 'Rank 4'], axis=1)
+ranking_df = ranking_df.sort_values(by='Final Rank', ascending=False)
+print(ranking_df)
+
+plt.figure(figsize=(20, 10))
 plt.bar(final_df['Team'], final_df['Avg. Home Attendance'])
 plt.title('Average Attendance per Home Game')
 plt.xlabel('Team')
@@ -136,8 +159,8 @@ plt.ylabel('Avg. Home Attendance')
 plt.savefig('figure1.png')
 
 
-plt.figure(figsize=(20,10))
-plt.scatter(final_df['Avg. Wins/Season'], final_df['Avg. Home Attendance'],label='Original Data')
+plt.figure(figsize=(20, 10))
+plt.scatter(final_df['Avg. Wins/Season'], final_df['Avg. Home Attendance'], label='Original Data')
 plt.plot(x, y, 'r', label='Fitted Line')
 plt.title('Attendance vs. Wins Regression')
 plt.legend(loc=3, prop={'size': 20})
@@ -149,7 +172,20 @@ plt.savefig('figure2.png')
 
 
 away_draw_df = final_df.sort_values(by='Away draw power', ascending=False)
-plt.figure(figsize=(20,10))
-plt.title
+plt.figure(figsize=(20, 10))
+plt.title('Away Draw Power')
 plt.bar(away_draw_df['Team'], away_draw_df['Away draw power'])
 plt.savefig('figure3.png')
+
+
+attendance_per_cap_df = final_df.sort_values(by='Attendance per capita', ascending=False)
+plt.figure(figsize=(20, 10))
+plt.bar(attendance_per_cap_df['Team'], attendance_per_cap_df['Attendance per capita'])
+plt.xlabel('Attendance per citizen in metro area (2013 Census)')
+plt.ylabel('Team')
+plt.title('Attendance per capita')
+plt.savefig('figure4.png')
+
+plt.figure(figsize=(20, 10))
+plt.bar(ranking_df['Team'], ranking_df['Final Rank'])
+plt.savefig('figure5.png')
