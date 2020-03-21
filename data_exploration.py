@@ -25,7 +25,10 @@ fans_per_win = []
 wins_per_season = []
 base_attendances = []
 
-
+'''
+There are three teams that have had multiple three letter team IDs.
+If statements align team IDs
+'''
 for i in range(0,len(master_df['Team'])):
     if master_df['Team'][i] == 'FLA':
         master_df['Team'][i] = 'MIA'
@@ -46,7 +49,9 @@ for i in range(0,len(master_df['Team'])):
     if master_df['Away Team'][i] == 'TBD':
         master_df['Away Team'][i] = 'TBR'
 
-
+'''
+loop calculates total win and win pct columns for final df
+'''
 for team in teams:
     overall_df = master_df[master_df['Team'] == team]
     win_count = len(overall_df[overall_df['Wins'] == 1])
@@ -120,6 +125,7 @@ final_df[['Avg. Home Attendance',
 
 final_df = final_df.sort_values(by=['Avg. Home Attendance'], ascending=False)
 final_df = final_df.reset_index()
+final_df.to_csv('presentation_data.csv')
 
 
 plt.figure(figsize=(20,10))
