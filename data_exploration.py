@@ -146,10 +146,12 @@ ranking_df['Rank 4'] = ranking_df['Attendance per capita'].rank()
 for i in range(0, len(ranking_df['Team'])):
     rank = (ranking_df['Rank 1'][i] + ranking_df['Rank 2'][i] + ranking_df['Rank 3'][i] + ranking_df['Rank 4'][i])/4
     final_rank.append(rank)
+
 ranking_df['Final Rank'] = final_rank
-ranking_df = ranking_df.drop(['Avg. Home Attendance', 'Away draw power', 'Base Attendance', 'Rank 1', 'Rank 2', 'Rank 3', 'Rank 4'], axis=1)
+ranking_df = ranking_df.drop(['Avg. Home Attendance', 'Away draw power', 'Base Attendance', 'City Pop', 'Attendance per capita', 'Rank 1', 'Rank 2', 'Rank 3', 'Rank 4'], axis=1)
 ranking_df = ranking_df.sort_values(by='Final Rank', ascending=False)
-print(ranking_df)
+ranking_df = ranking_df.reset_index()
+ranking_df.to_csv('final_ranking.csv')
 
 plt.figure(figsize=(20, 10))
 plt.bar(final_df['Team'], final_df['Avg. Home Attendance'])
