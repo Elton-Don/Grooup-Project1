@@ -124,6 +124,7 @@ final_df = final_df.reset_index()
 
 plt.figure(figsize=(20,10))
 plt.bar(final_df['Team'], final_df['Avg. Home Attendance'])
+plt.title('Average Attendance per Home Game')
 plt.xlabel('Team')
 plt.ylabel('Avg. Home Attendance')
 plt.savefig('figure1.png')
@@ -131,7 +132,8 @@ plt.savefig('figure1.png')
 
 plt.figure(figsize=(20,10))
 plt.scatter(final_df['Avg. Wins/Season'], final_df['Avg. Home Attendance'],label='Original Data')
-plt.plot(x, y, 'r', label='fitted line')
+plt.plot(x, y, 'r', label='Fitted Line')
+plt.title('Attendance vs. Wins Regression')
 plt.legend(loc=3, prop={'size': 20})
 plt.xlim(65, 96)
 plt.ylim(0, 50000)
@@ -140,6 +142,8 @@ plt.ylabel('Avg. Home Attendance')
 plt.savefig('figure2.png')
 
 
+away_draw_df = final_df.sort_values(by='Away draw power', ascending=False)
 plt.figure(figsize=(20,10))
-plt.bar(final_df['Team'], final_df['Away draw power'])
+plt.title
+plt.bar(away_draw_df['Team'], away_draw_df['Away draw power'])
 plt.savefig('figure3.png')
