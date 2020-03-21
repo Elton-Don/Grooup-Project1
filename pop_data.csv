@@ -1,0 +1,56 @@
+,Team,City Pop
+0,ARI,"391    4268289.0
+Name: Population, dtype: float64"
+1,SDP,"475    3138265.0
+Name: Population, dtype: float64"
+2,MIA,"819    5673185.0
+Name: Population, dtype: float64"
+3,TBR,"560    2819241.0
+Name: Population, dtype: float64"
+4,NYM,"877    19716880.0
+Name: Population, dtype: float64"
+5,NYY,"877    19716880.0
+Name: Population, dtype: float64"
+6,MIL,"825    1560621.0
+Name: Population, dtype: float64"
+7,KCR,"701    2025297.0
+Name: Population, dtype: float64"
+8,CLE,"309    2070965.0
+Name: Population, dtype: float64"
+9,CIN,"301    2122940.0
+Name: Population, dtype: float64"
+10,PIT,"397    2358746.0
+Name: Population, dtype: float64"
+11,COL,"364    2601465.0
+Name: Population, dtype: float64"
+12,BAL,"196    2734044.0
+Name: Population, dtype: float64"
+13,MIN,"827    3391191.0
+Name: Population, dtype: float64"
+14,SEA,"496    3504628.0
+Name: Population, dtype: float64"
+15,SFG,"479    4402729.0
+Name: Population, dtype: float64"
+16,OAK,"479    4402729.0
+Name: Population, dtype: float64"
+17,DET,"367    4295700.0
+Name: Population, dtype: float64"
+18,BOS,"Series([], Name: Population, dtype: float64)"
+19,ATL,"185    5379176.0
+Name: Population, dtype: float64"
+20,WSH,"618    5759330.0
+Name: Population, dtype: float64"
+21,HOU,"135    6063540.0
+Name: Population, dtype: float64"
+22,PHI,"390    5992766.0
+Name: Population, dtype: float64"
+23,TEX,"348    6575833.0
+Name: Population, dtype: float64"
+24,CHC,"298    9488493.0
+Name: Population, dtype: float64"
+25,CWS,"298    9488493.0
+Name: Population, dtype: float64"
+26,LAA,"Series([], Name: Population, dtype: float64)"
+27,LAD,"Series([], Name: Population, dtype: float64)"
+28,STL,"465    2792127.0
+Name: Population, dtype: float64"
